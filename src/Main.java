@@ -1,9 +1,11 @@
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ManagementProduct productManagement = new ManagementProduct();
+        Product product = new Product();
         String choice;
         do {
             menu();
@@ -22,11 +24,19 @@ public class Main {
                 }
                 break;
                 case "4": {//ghi file
-                   productManagement.writeFile();
+                    try {
+                        productManagement.writeFile("demo.csv",productManagement.productList);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
                 case "5": {//đọc file
-                    productManagement.readFile();
+                    try {
+                        productManagement.readFile("demo.csv");
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
                 default: {

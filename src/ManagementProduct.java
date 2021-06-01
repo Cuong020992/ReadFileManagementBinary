@@ -3,6 +3,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Spliterator;
 
 public class ManagementProduct {
     List<Product> productList;
@@ -12,28 +13,23 @@ public class ManagementProduct {
         productList = new ArrayList<>();
     }
 
-    public void writeFile(String path, Product product) throws IOException {
-        FileWriter fileWriter = new FileWriter(path);
-        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-
-        bufferedWriter.write(product.getCodeProduct() + ","
-                + product.getNameProduct() + "," + product.getBrand() + ","
-                + product.getPrice() + "," + product.getMoreDetail());
-
-        bufferedWriter.close();
-        fileWriter.close();
+    public void writeFile(String path, List<Product> products) throws IOException {
+        FileOutputStream fileOutputStream = new FileOutputStream(path);
+        ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
+        outputStream.writeObject(products);
+        outputStream.close();
+        fileOutputStream.close();
     }
 
-    Product readFile(String path) throws IOException {
-        FileReader fileReader = new FileReader(path);
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
-        String line = bufferedReader.readLine();
-        String[] values = line.split(",");
-        Product product = new Product(values[0],values[1],values[2],Integer.parseInt(values[3]),values[4]);
-        return product;
+    Product readFile(String path) throws IOException, ClassNotFoundException {
+        FileInputStream fileInputStream = new FileInputStream(path);
+        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+        productList = (List<Product>) objectInputStream.readObject();
+        System.out.println(productList);
+        return null;
     }
 
-    public void addProduct(){
+    public void addProduct() {
         System.out.print("nhập mã sản phẩm: ");
         String productCode = scanner.nextLine();
         System.out.print("nhập tên sản phẩm: ");
@@ -45,7 +41,7 @@ public class ManagementProduct {
         scanner.nextLine();
         System.out.print("nhập chi tiết sản phẩm: ");
         String moreDetail = scanner.nextLine();
-        Product product = new Product(productCode,nameProduct,brand,price,moreDetail);
+        Product product = new Product(productCode, nameProduct, brand, price, moreDetail);
         productList.add(product);
     }
 
@@ -60,7 +56,7 @@ public class ManagementProduct {
         String inputProductCode = scanner.nextLine();
         int count = 0;
         for (Product products : productList) {
-            if (products.getCodeProduct() == inputProductCode) {
+            if (products.getCodeProduct().equals(inputProductCode)) {
                 System.out.println(products);
                 count++;
             }
